@@ -13,11 +13,31 @@ use Psr\Log\LoggerInterface;
 class Sentry extends Action
 {
     /**
+     * @var PageFactory
+     */
+    protected PageFactory $resultPageFactory;
+    /**
+     * @var Json
+     */
+    private Json $jsonSerializer;
+    /**
+     * @var LoggerInterface
+     */
+    protected LoggerInterface $logger;
+    /**
+     * @var Data
+     */
+    private Data $helperSentry;
+    /**
+     * @var MonologPlugin
+     */
+    private MonologPlugin $monologPlugin;
+    /**
      * Authorization level of a basic admin session.
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'JustBetter_Sentry::sentry';
+    public const ADMIN_RESOURCE = 'JustBetter_Sentry::sentry';
 
     /**
      * Sentry constructor.
@@ -31,12 +51,17 @@ class Sentry extends Action
      */
     public function __construct(
         Context $context,
-        protected PageFactory $resultPageFactory,
-        private Json $jsonSerializer,
-        protected LoggerInterface $logger,
-        private Data $helperSentry,
-        private MonologPlugin $monologPlugin
+        PageFactory $resultPageFactory,
+        Json $jsonSerializer,
+        LoggerInterface $logger,
+        Data $helperSentry,
+        MonologPlugin $monologPlugin
     ) {
+        $this->resultPageFactory = $resultPageFactory;
+        $this->jsonSerializer = $jsonSerializer;
+        $this->logger = $logger;
+        $this->helperSentry = $helperSentry;
+        $this->monologPlugin = $monologPlugin;
         parent::__construct($context);
     }
 

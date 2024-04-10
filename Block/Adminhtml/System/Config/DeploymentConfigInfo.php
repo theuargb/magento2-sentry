@@ -10,6 +10,10 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 class DeploymentConfigInfo extends Field
 {
     /**
+     * @var Version
+     */
+    private Version $version;
+    /**
      * @var string
      */
     protected $_template = 'system/config/deployment-config-info.phtml';
@@ -23,9 +27,10 @@ class DeploymentConfigInfo extends Field
      */
     public function __construct(
         Context $context,
-        private Version $version,
+        Version $version,
         array $data = []
     ) {
+        $this->version = $version;
         parent::__construct($context, $data);
     }
 

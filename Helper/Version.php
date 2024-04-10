@@ -14,6 +14,14 @@ use Psr\Log\LoggerInterface;
 class Version extends AbstractHelper
 {
     /**
+     * @var \Magento\Framework\App\State
+     */
+    private \Magento\Framework\App\State $appState;
+    /**
+     * @var \Magento\Framework\App\View\Deployment\Version\StorageInterface
+     */
+    private \Magento\Framework\App\View\Deployment\Version\StorageInterface $versionStorage;
+    /**
      * @var string
      */
     private $cachedValue;
@@ -34,10 +42,12 @@ class Version extends AbstractHelper
      * @param DeploymentConfig|null                                           $deploymentConfig
      */
     public function __construct(
-        private \Magento\Framework\App\State $appState,
-        private \Magento\Framework\App\View\Deployment\Version\StorageInterface $versionStorage,
+        \Magento\Framework\App\State $appState,
+        \Magento\Framework\App\View\Deployment\Version\StorageInterface $versionStorage,
         DeploymentConfig $deploymentConfig = null
     ) {
+        $this->appState = $appState;
+        $this->versionStorage = $versionStorage;
         $this->deploymentConfig = $deploymentConfig ?: ObjectManager::getInstance()->get(DeploymentConfig::class);
     }
 

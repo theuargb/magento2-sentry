@@ -14,6 +14,15 @@ use Sentry\State\Scope as SentryScope;
 class SentryLog extends Monolog
 {
     /**
+     * @var Data
+     */
+    protected Data $data;
+    /**
+     * @var Session
+     */
+    protected Session $customerSession;
+    private State $appState;
+    /**
      * @var array
      */
     protected $config = [];
@@ -29,12 +38,15 @@ class SentryLog extends Monolog
      */
     public function __construct(
         $name,
-        protected Data $data,
-        protected Session $customerSession,
-        private State $appState,
+        Data $data,
+        Session $customerSession,
+        State $appState,
         array $handlers = [],
         array $processors = []
     ) {
+        $this->data = $data;
+        $this->customerSession = $customerSession;
+        $this->appState = $appState;
         parent::__construct($name, $handlers, $processors);
     }
 

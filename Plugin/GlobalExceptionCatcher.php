@@ -14,6 +14,26 @@ use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 class GlobalExceptionCatcher
 {
     /**
+     * @var SenteryHelper
+     */
+    protected SenteryHelper $sentryHelper;
+    /**
+     * @var ReleaseIdentifier
+     */
+    private ReleaseIdentifier $releaseIdentifier;
+    /**
+     * @var SentryInteraction
+     */
+    private SentryInteraction $sentryInteraction;
+    /**
+     * @var EventManagerInterface
+     */
+    private EventManagerInterface $eventManager;
+    /**
+     * @var DataObjectFactory
+     */
+    private DataObjectFactory $dataObjectFactory;
+    /**
      * ExceptionCatcher constructor.
      *
      * @param SenteryHelper         $sentryHelper
@@ -22,13 +42,13 @@ class GlobalExceptionCatcher
      * @param EventManagerInterface $eventManager
      * @param DataObjectFactory     $dataObjectFactory
      */
-    public function __construct(
-        protected SenteryHelper $sentryHelper,
-        private ReleaseIdentifier $releaseIdentifier,
-        private SentryInteraction $sentryInteraction,
-        private EventManagerInterface $eventManager,
-        private DataObjectFactory $dataObjectFactory
-    ) {
+    public function __construct(SenteryHelper $sentryHelper, ReleaseIdentifier $releaseIdentifier, SentryInteraction $sentryInteraction, EventManagerInterface $eventManager, DataObjectFactory $dataObjectFactory)
+    {
+        $this->sentryHelper = $sentryHelper;
+        $this->releaseIdentifier = $releaseIdentifier;
+        $this->sentryInteraction = $sentryInteraction;
+        $this->eventManager = $eventManager;
+        $this->dataObjectFactory = $dataObjectFactory;
     }
 
     public function aroundLaunch(AppInterface $subject, callable $proceed)
