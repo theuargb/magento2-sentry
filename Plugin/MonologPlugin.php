@@ -40,15 +40,14 @@ class MonologPlugin extends Monolog
      * @return bool Whether the record has been processed
      */
     public function addRecord(
-        int $level,
-        string $message,
-        array $context = [],
-        DateTimeImmutable $datetime = null
-    ): bool {
+        $level,
+        $message,
+        $context = []
+    ) {
         if ($this->deploymentConfig->isAvailable() && $this->sentryHelper->isActive()) {
             $this->sentryLog->send($message, $level, $context);
         }
 
-        return parent::addRecord($level, $message, $context, $datetime);
+        return parent::addRecord($level, $message, $context);
     }
 }
