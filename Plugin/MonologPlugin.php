@@ -10,17 +10,23 @@ use Monolog\DateTimeImmutable;
 
 class MonologPlugin extends Monolog
 {
+    protected Data $sentryHelper;
+    protected SentryLog $sentryLog;
+    protected DeploymentConfig $deploymentConfig;
     /**
      * {@inheritdoc}
      */
     public function __construct(
         $name,
-        protected Data $sentryHelper,
-        protected SentryLog $sentryLog,
-        protected DeploymentConfig $deploymentConfig,
+        Data $sentryHelper,
+        SentryLog $sentryLog,
+        DeploymentConfig $deploymentConfig,
         array $handlers = [],
         array $processors = []
     ) {
+        $this->sentryHelper = $sentryHelper;
+        $this->sentryLog = $sentryLog;
+        $this->deploymentConfig = $deploymentConfig;
         parent::__construct($name, $handlers, $processors);
     }
 
@@ -34,15 +40,14 @@ class MonologPlugin extends Monolog
      * @return bool Whether the record has been processed
      */
     public function addRecord(
-        int $level,
-        string $message,
-        array $context = [],
-        DateTimeImmutable $datetime = null
-    ): bool {
+        $level,
+        $message,
+        $context = []
+    ) {
         if ($this->deploymentConfig->isAvailable() && $this->sentryHelper->isActive()) {
             $this->sentryLog->send($message, $level, $context);
         }
 
-        return parent::addRecord($level, $message, $context, $datetime);
+        return parent::addRecord($level, $message, $context);
     }
 }
