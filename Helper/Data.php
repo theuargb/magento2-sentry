@@ -21,8 +21,28 @@ use Throwable;
 
 class Data extends AbstractHelper
 {
-    const XML_PATH_SRS = 'sentry/general/';
-    const XML_PATH_SRS_ISSUE_GROUPING = 'sentry/issue_grouping/';
+    /**
+     * @var StoreManagerInterface
+     */
+    protected StoreManagerInterface $storeManager;
+    /**
+     * @var State
+     */
+    protected State $appState;
+    /**
+     * @var Json
+     */
+    private Json $serializer;
+    /**
+     * @var ProductMetadataInterface
+     */
+    protected ProductMetadataInterface $productMetadataInterface;
+    /**
+     * @var DeploymentConfig
+     */
+    protected DeploymentConfig $deploymentConfig;
+    public const XML_PATH_SRS = 'sentry/general/';
+    public const XML_PATH_SRS_ISSUE_GROUPING = 'sentry/issue_grouping/';
 
     /**
      * @var ScopeConfigInterface
@@ -63,12 +83,17 @@ class Data extends AbstractHelper
      */
     public function __construct(
         Context $context,
-        protected StoreManagerInterface $storeManager,
-        protected State $appState,
-        private Json $serializer,
-        protected ProductMetadataInterface $productMetadataInterface,
-        protected DeploymentConfig $deploymentConfig
+        StoreManagerInterface $storeManager,
+        State $appState,
+        Json $serializer,
+        ProductMetadataInterface $productMetadataInterface,
+        DeploymentConfig $deploymentConfig
     ) {
+        $this->storeManager = $storeManager;
+        $this->appState = $appState;
+        $this->serializer = $serializer;
+        $this->productMetadataInterface = $productMetadataInterface;
+        $this->deploymentConfig = $deploymentConfig;
         $this->scopeConfig = $context->getScopeConfig();
         $this->collectModuleConfig();
 
